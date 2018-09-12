@@ -10,6 +10,7 @@ namespace DiscordBotCore
 
             Console.WriteLine("end");
             Console.ReadLine();
+            Console.WriteLine("CHANGES");
         }
     }
 }
