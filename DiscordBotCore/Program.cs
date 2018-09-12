@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DiscordBotCore.Storage;
+using DiscordBotCore.Storage.Implementations;
+using System;
 using System.Linq;
 
 namespace DiscordBotCore
@@ -8,9 +10,10 @@ namespace DiscordBotCore
         private static void Main(string[] args)
         {
 
+            Unity.RegisterTypes();
+
             Console.WriteLine("end");
             Console.ReadLine();
-            Console.WriteLine("CHANGES");
         }
     }
 }
