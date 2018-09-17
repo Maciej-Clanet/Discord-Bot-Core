@@ -6,6 +6,8 @@ using Unity.Lifetime;
 
 namespace DiscordBotCore
 {
+    /*Unity is a dependency injection framework. It is used to create various objects in the application, while resolving their dependencies
+     and managing their lifecycle*/
     public static class Unity
     {
 
@@ -21,14 +23,17 @@ namespace DiscordBotCore
             }
         }
 
-
+        /*A single location to specify how to resolve dependencies, and set lifecycle the objects*/
         public static void RegisterTypes()
         {
             _container = new UnityContainer();
-            //register IDataStorage type to be resolved by a singleton instance of InMemoryStorage
+            //ContainerControlledLifetimeManager will create the dependency as a singleton. Each subsequent time it's called will return the same instance.
             _container.RegisterType<IDataStorage, InMemoryStorage>( new ContainerControlledLifetimeManager() );
+            _container.RegisterType<ILogger, Logger>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<Discord.Connection>(new ContainerControlledLifetimeManager());
         }
 
+        //basic wrapper function to simply resolving elements.
         public static T Resolve<T>()
         {
             return (T)Container.Resolve(typeof(T), string.Empty, new CompositeResolverOverride());
