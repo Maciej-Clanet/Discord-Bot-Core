@@ -1,4 +1,5 @@
-﻿using Discord.WebSocket;
+﻿using Discord;
+using Discord.WebSocket;
 using DiscordBotCore.Discord.Entities;
 using System;
 using System.Collections.Generic;
@@ -10,23 +11,25 @@ namespace DiscordBotCore.Discord
     public class Connection
     {
 
-        private DiscordSocketClient _client;
+        private readonly DiscordSocketClient _client;
+        private readonly DiscordLogger _logger;
 
-        private DiscordLogger _logger;
 
-        public Connection(DiscordLogger logger)
+        public Connection(DiscordLogger logger, DiscordSocketClient client)
         {
             _logger = logger;
+            _client = client;
         }
         
         internal async Task ConnectAsync(DiscordBotCoreConfig config)
         {
-            _client = new DiscordSocketClient(config.SocketConfig);
-
-
-
-
             _client.Log += _logger.Log;
+
+            await _client.LoginAsync(TokenType.Bot, config.Token);
+
+            await _client.StartAsync();
+
+            await Task.Delay(-1);
         }
 
     }

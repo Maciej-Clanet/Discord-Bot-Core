@@ -3,6 +3,9 @@ using DiscordBotCore.Storage.Implementations;
 using Unity;
 using Unity.Resolution;
 using Unity.Lifetime;
+using Unity.Injection;
+using DiscordBotCore.Discord;
+using Discord.WebSocket;
 
 namespace DiscordBotCore
 {
@@ -27,10 +30,14 @@ namespace DiscordBotCore
         public static void RegisterTypes()
         {
             _container = new UnityContainer();
-            //ContainerControlledLifetimeManager will create the dependency as a singleton. Each subsequent time it's called will return the same instance.
-            _container.RegisterType<IDataStorage, InMemoryStorage>( new ContainerControlledLifetimeManager() );
-            _container.RegisterType<ILogger, Logger>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<Discord.Connection>(new ContainerControlledLifetimeManager());
+            //Singleton. Each subsequent time it's called will return the same instance.
+            _container.RegisterSingleton<IDataStorage, JsonStorage>();
+            _container.RegisterSingleton<ILogger, Logger>();
+
+            _container.RegisterType<DiscordSocketConfig>(new InjectionFactory(i => SocketConfig.GetDefault()));
+            _container.RegisterSingleton<DiscordSocketClient>(new InjectionConstructor(typeof(DiscordSocketConfig)));
+            _container.RegisterSingleton<Discord.Connection>();
+
         }
 
         //basic wrapper function to simply resolving elements.
